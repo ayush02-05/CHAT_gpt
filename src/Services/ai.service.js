@@ -4,14 +4,15 @@ const { GoogleGenAI } = require("@google/genai");
 const ai = new GoogleGenAI({});
 
 async function generateResponse(content) {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: content,
-  });
-  return response.text;
-  // } catch (error) {
-  //   console.error("AI Error : ", error);
-  // }
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: content,
+    });
+    return response.text;
+  } catch (error) {
+    console.error("AI Error : ", error);
+  }
 }
 
 module.exports = {
