@@ -14,6 +14,7 @@ export default function Home() {
   const [chatList, setchatList] = useState([]);
   const [activeChatId, setActiveChatId] = useState(null);
   const [socket, setsocket] = useState(null);
+  const activeChatIdRef = useRef(null);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -23,6 +24,10 @@ export default function Home() {
       }
     }
   }, [messages]);
+
+  useEffect(() => {
+    activeChatIdRef.current = activeChatId;
+  }, [activeChatId]);
 
   useEffect(() => {
     async function fetchdata() {
@@ -42,10 +47,11 @@ export default function Home() {
 
     const tempdata = io("https://chat-gpt-a3cn.onrender.com", {
       withCredentials: true,
+      transports: ["websocket"], // ✅ render friendly
     });
 
     tempdata.on("ai-response", ({ chatId, text }) => {
-      if (chatId !== activeChatId) return;
+      if (chatId !== activeChatIdRef.current) return;
       setIsLoading(false);
       setMessages((prev) => [...prev, { role: "model", text }]);
     });
