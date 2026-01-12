@@ -19,14 +19,19 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     if (!data) return;
-    const response = await axios.post(
-      "http://localhost:5000/user/login",
-      data,
-      { withCredentials: true }
-    );
-    if (response.status == 200) {
-      toast.success("User Logged in Successfully");
-      navigate("/home");
+    try {
+      const response = await axios.post(
+        "https://chat-gpt-a3cn.onrender.com/user/login",
+        data,
+        { withCredentials: true }
+      );
+      if (response.status == 200) {
+        toast.success("User Logged in Successfully");
+        navigate("/home");
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
     }
   };
 

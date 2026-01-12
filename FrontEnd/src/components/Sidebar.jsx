@@ -16,20 +16,24 @@ export default function Sidebar({
   const handleNewChat = async () => {
     const title = prompt("Enter Title : ");
     if (title !== "") {
-      const response = await axios.post(
-        "http://localhost:5000/chat",
-        { title },
-        { withCredentials: true }
-      );
-      const newChat = {
-        _id: response.data.chat._id,
-        title: response.data.chat.title,
-      };
+      try {
+        const response = await axios.post(
+          "https://chat-gpt-a3cn.onrender.com/chat",
+          { title },
+          { withCredentials: true }
+        );
+        const newChat = {
+          _id: response.data.chat._id,
+          title: response.data.chat.title,
+        };
 
-      setchatList([newChat, ...chatList]);
+        setchatList([newChat, ...chatList]);
 
-      if (response) {
-        toast.success("Chat created successfully");
+        if (response) {
+          toast.success("Chat created successfully");
+        }
+      } catch (error) {
+        console.log(error);
       }
     } else console.log("No input Provide ");
   };
@@ -37,7 +41,7 @@ export default function Sidebar({
   const handlelogout = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/user/logout",
+        "https://chat-gpt-a3cn.onrender.com/user/logout",
         {},
         { withCredentials: true }
       );

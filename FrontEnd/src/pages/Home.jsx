@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/Sidebar.jsx";
 import Navbar from "../components/Navbar.jsx";
 import ChatInput from "../components/ChatInput.jsx";
-import ActionChips from "../components/ActionChips.jsx";
 import axios from "axios";
 import { io } from "socket.io-client";
 
@@ -27,15 +26,23 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchdata() {
-      await axios
-        .get("http://localhost:5000/chat", { withCredentials: true })
-        .then((response) => {
-          setchatList(response.data.chat);
-        });
+      try {
+        await axios
+          .get("https://chat-gpt-a3cn.onrender.com/chat", {
+            withCredentials: true,
+          })
+          .then((response) => {
+            setchatList(response.data.chat);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
     fetchdata();
 
-    const tempdata = io("http://localhost:5000", { withCredentials: true });
+    const tempdata = io("https://chat-gpt-a3cn.onrender.com", {
+      withCredentials: true,
+    });
 
     tempdata.on("ai-response", ({ chatId, text }) => {
       if (chatId !== activeChatId) return;
@@ -54,7 +61,7 @@ export default function Home() {
     if (!chatID) return;
     try {
       const response = await axios.get(
-        `http://localhost:5000/chat/messages/${chatID}`,
+        `https://chat-gpt-a3cn.onrender.com/chat/messages/${chatID}`,
         { withCredentials: true }
       );
 

@@ -24,13 +24,21 @@ export default function SignUp({ onNavigate, onSignUp }) {
 
   const onSubmit = async (data) => {
     if (!data) return;
-
-    const res = await axios.post("http://localhost:5000/user/register", data, {
-      withCredentials: true,
-    });
-    if (res.status == 200) {
-      toast.success("SingUp Successfully");
-      navigate("/home");
+    try {
+      const res = await axios.post(
+        "https://chat-gpt-a3cn.onrender.com/user/register",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.status == 200) {
+        toast.success("SingUp Successfully");
+        navigate("/home");
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
     }
   };
 
